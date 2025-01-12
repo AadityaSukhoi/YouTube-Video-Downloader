@@ -1,19 +1,3 @@
-# from pytube import YouTube
-# import streamlit as st
-
-# st.title("YouTube Video Downloader")
-
-# link = st.text_input("Enter the URL of the YouTube video")
-
-# if st.button("Download"):
-
-#     yt = YouTube(link)
-#     video = yt.streams.get_highest_resolution()
-
-#     video.download()
-
-#     st.success("Video downloaded successfully")
-
 import yt_dlp
 import streamlit as st
 
