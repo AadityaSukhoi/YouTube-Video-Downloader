@@ -1,61 +1,46 @@
-# import yt_dlp
-# import streamlit as st
-
-# st.title("YouTube Video Downloader")
-
-# link = st.text_input("Enter the URL of the YouTube video")
-
-# if st.button("Download"):
-#     try:
-#         ydl_opts = {
-#             'outtmpl': '%(title)s.%(ext)s',
-#         }
-#         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-#             ydl.download([link])
-#         st.success("Video downloaded successfully")
-#     except Exception as e:
-#         st.error(f"An error occurred: {e}")
-
 import yt_dlp
 import streamlit as st
 import os
-from io import BytesIO
+import tempfile
 
 st.title("YouTube Video Downloader")
 
 link = st.text_input("Enter the URL of the YouTube video")
 
-if st.button("Download"):
-    try:
-        # Create a temporary directory for downloads
-        if not os.path.exists("temp"):
-            os.makedirs("temp")
-        
+def download_video(url):
+    with tempfile.TemporaryDirectory() as temp_dir:
         ydl_opts = {
-            'outtmpl': 'temp/%(title)s.%(ext)s',
+            'outtmpl': os.path.join(temp_dir, '%(title)s.%(ext)s'),
+            'format': 'best[ext=mp4]',  # Forces MP4 format
+            'no_warnings': True,
+            'extract_flat': False
         }
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            # Get video info first
-            info = ydl.extract_info(link, download=False)
+            # First extract info to handle both regular videos and shorts
+            info = ydl.extract_info(url, download=True)
             filename = ydl.prepare_filename(info)
             
-            # Download the video
-            ydl.download([link])
-            
-            # Read the file and create a download button
+            # Read the downloaded file
             with open(filename, 'rb') as f:
-                st.download_button(
-                    label="Download Video",
-                    data=f,
-                    file_name=os.path.basename(filename),
-                    mime="video/mp4"
-                )
+                video_data = f.read()
+                
+            return video_data, os.path.basename(filename)
+
+if link:
+    try:
+        # Convert shorts URL to regular URL if needed
+        if "/shorts/" in link:
+            link = link.replace("/shorts/", "/watch?v=")
             
-            # Clean up
-            os.remove(filename)
-            
-        st.success("Video ready for download!")
+        video_data, filename = download_video(link)
+        
+        st.download_button(
+            label="Download Video",
+            data=video_data,
+            file_name=filename,
+            mime="video/mp4"
+        )
+        
     except Exception as e:
         st.error(f"An error occurred: {e}")
-        
