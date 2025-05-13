@@ -92,7 +92,7 @@ if url:
         # Show thumbnail
         if yt_id:
             thumbnail_url = f"https://img.youtube.com/vi/{yt_id}/maxresdefault.jpg"
-            thumbnail_placeholder.image(thumbnail_url, use_column_width=True)
+            thumbnail_placeholder.image(thumbnail_url, use_container_width=True)
 
         # Show download button
         with open(output_path, "rb") as file:
