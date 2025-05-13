@@ -57,8 +57,8 @@ streamlit run app.py
 ---
 
 ## Author
-Aaditya Ranjan Moitra
-🎓 B.Tech (Hons.) CSE (AI & Analytics), GLA University
+  Aaditya Ranjan Moitra
+  
 📫 [LinkedIn](https://www.linkedin.com/in/aaditya-ranjan-moitra/) | [GitHub](https://github.com/AadityaSukhoi)
 
 ---
